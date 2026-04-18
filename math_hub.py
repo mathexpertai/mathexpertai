@@ -1,41 +1,41 @@
 import streamlit as st
 import google.generativeai as genai
+from PIL import Image
 
-# API Setup
-# Jyoti, apni API Key yahan paste karein
+# Secrets se API Key lena
 genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
-# Website Layout (Branding: Math Expert AI)
-st.set_page_config(page_title="Math Expert AI", page_icon="🔢")
-st.title("🔢 Math Expert AI")
-st.markdown("#### Your Professional AI Professor for Step-by-Step Solutions")
-st.write("Specialized in Calculus, Algebra, and Advanced Mathematics for students worldwide.")
+st.title("Math Expert AI 🎓")
+st.write("Sawal likhein ya photo upload karein, step-by-step solution payein!")
 
-# Model selection logic
-try:
-    models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
-    selected_model = 'models/gemini-1.5-flash' if 'models/gemini-1.5-flash' in models else models[0]
-except:
-    selected_model = "gemini-1.5-flash"
+# Model setup (Flash model photo/video ke liye best hai)
+model = genai.GenerativeModel('gemini-1.5-flash')
 
-# User Input Box
-user_input = st.text_area("Enter your Math problem here:", placeholder="Example: Solve the integral of sin(x) dx")
+# Input ke do tarike: Text ya Photo
+input_text = st.text_area("Apna sawal yahan likhein:")
+uploaded_file = st.file_uploader("Sawal ki photo ya video upload karein", type=["jpg", "jpeg", "png", "mp4"])
 
 if st.button("Solve Step-by-Step"):
-    if user_input:
-        with st.spinner('Math Expert AI is analyzing the problem...'):
-            try:
-                model = genai.GenerativeModel(selected_model)
-                # Instruction to provide detailed solution
-                response = model.generate_content(f"You are Math Expert AI. Solve this math problem step-by-step in English: {user_input}")
-                st.success("Detailed Solution:")
-                st.write(response.text)
-            except Exception as e:
-                st.error(f"Something went wrong. Please try again later.")
+    if input_text or uploaded_file:
+        with st.spinner("AI Professor soch raha hai..."):
+            content = []
+            if input_text:
+                content.append(input_text)
+            if uploaded_file:
+                # Agar photo hai toh use process karein
+                if uploaded_file.type.startswith('image'):
+                    img = Image.open(uploaded_file)
+                    content.append(img)
+                # Video ke liye (Experimental)
+                else:
+                    content.append("Analyze this video and solve the math problem shown in it.")
+            
+            response = model.generate_content(content)
+            st.success("Solution Taiyar Hai!")
+            st.write(response.text)
     else:
-        st.warning("Please type a question first!")
+        st.warning("Kripya kuch likhein ya photo upload karein.")
 
-# Sidebar Branding
-st.sidebar.title("Math Expert AI")
-st.sidebar.info("Developed by: Jyoti (M.Sc. Mathematics)")
-st.sidebar.write("Aiming to provide high-quality math education globally.")
+# --- Visitor Counter Badge ---
+st.markdown("---")
+st.markdown("![Visitors](https://api.visitorbadge.io/api/combined?path=https%3A%2F%2Fmathexpertai.streamlit.app&labelColor=%2337d67a&countColor=%23263238&style=flat)")
