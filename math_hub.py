@@ -9,7 +9,7 @@ st.title("Math Expert AI 🎓")
 st.write("Sawal likhein ya photo upload karein, step-by-step solution payein!")
 
 # Model setup (Flash model photo/video ke liye best hai)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 # Input ke do tarike: Text ya Photo
 input_text = st.text_area("Apna sawal yahan likhein:")
