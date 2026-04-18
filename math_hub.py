@@ -3,7 +3,7 @@ import google.generativeai as genai
 
 # API Setup
 # Jyoti, apni API Key yahan paste karein
-genai.configure(api_key="AQ.Ab8RN6LpOQT9Ya6UejrSG-MQHQbkeQxYp9atHc17Jmdz0x6DYA")
+genai.configure(api_key=st.secrets["GOOGLE_API_KEY"])
 
 # Website Layout (Branding: Math Expert AI)
 st.set_page_config(page_title="Math Expert AI", page_icon="🔢")
