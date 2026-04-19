@@ -10,13 +10,27 @@ else:
 
 st.title("Global Math Expert AI 🌍🎓")
 
-# 2. Language Selection
+# 2. Smart Model Selection Logic (Aapka Idea)
+try:
+    available_models = [m.name for m in genai.list_models() if 'generateContent' in m.supported_generation_methods]
+    # Check karte hain ki Flash mil raha hai ya nahi, warna pehla available model le lenge
+    if 'models/gemini-1.5-flash' in available_models:
+        selected_model = 'models/gemini-1.5-flash'
+    elif 'models/gemini-1.5-pro' in available_models:
+        selected_model = 'models/gemini-1.5-pro'
+    else:
+        selected_model = available_models[0]
+except Exception as e:
+    # Agar list nahi mil rahi toh default par chale jayenge
+    selected_model = "gemini-1.5-flash"
+
+# Model ko set karna
+model = genai.GenerativeModel(selected_model)
+
+# 3. Language Selection
 language = st.selectbox("Choose Language:", ["English", "Hindi", "Spanish", "French", "German"])
 
-# 3. Model Setup (Using the most recent stable version)
-model = genai.GenerativeModel('gemini-1.5-flash-latest')
-
-# 4. Inputs
+# 4. Input UI
 input_text = st.text_area("Question:")
 uploaded_file = st.file_uploader("Upload Photo:", type=["jpg", "png", "jpeg"])
 
@@ -30,13 +44,12 @@ if st.button("Solve Now"):
         
         if uploaded_file:
             img = Image.open(uploaded_file)
-            # Agar sirf image hai toh prompt pehle jayega
             if not input_text:
                 content.append(prompt)
             content.append(img)
             
         if content:
-            with st.spinner("Analyzing..."):
+            with st.spinner(f"Using {selected_model} to solve..."):
                 response = model.generate_content(content)
                 st.success(f"Solution in {language}:")
                 st.write(response.text)
