@@ -10,7 +10,7 @@ st.title("Math Expert AI 🎓")
 st.write("Sawal likhein ya photo upload karein, step-by-step solution payein!")
 
 # Model setup - Gemini 1.5 Flash (Sabse fast aur photo ke liye best)
-model = genai.GenerativeModel('models/gemini-1.5-flash')
+model = genai.GenerativeModel('gemini-pro')
 
 # Input Options
 input_text = st.text_area("Apna sawal yahan likhein:", placeholder="Example: Solve the integral of sin(x) dx")
