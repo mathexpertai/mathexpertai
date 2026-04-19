@@ -11,7 +11,7 @@ else:
 st.title("Math Expert AI 🎓")
 
 # 2. Model Selection (Stable Version)
-model = genai.GenerativeModel('gemini-1.5-flash')
+model = genai.GenerativeModel('models/gemini-1.5-flash')
 
 # 3. Input UI
 input_text = st.text_area("Sawal likhein:")
